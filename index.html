@@ -15,7 +15,23 @@
         <!-- the headder with app title and a button to add a task-->
         <h1 class="page-title">Taskinator</h1>
         <p>Clck the button below to add a new task</p>
-        <button class="btn" id="save-task">Add Task</button>
+        <form id="task-form">
+            <div class="form-group">
+                <input type="text" name="task-name" placehoilder="Enter Task Name" />
+            </div>
+            <div class="form-group">
+                <select name="task-type" class="select-dropdown">
+                  <option value="" disabled selected>Pick a task type</option>
+                  <option value="Coding">Coding</option>
+                  <option value="Work">Work</option>
+                  <option value="Bills">Bills</option>
+                  <option value="Misc">Misc</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn" id="save-task" type="submit">Add Task</button>
+            </div>
+        </form>
     </header>
 
     <main class="page-content">
@@ -23,7 +39,7 @@
         <section class="task-list-wrapper">
             <h2 class="list-title">Tasks To Do</h2>
             <ul class="task-list" id="tasks-to-do">
-                <li class="task-item">A task is going to be added soon</li>
+                <!--Saved and newly generated tasks will go here -->
             </ul>
         </section>
     </main>
