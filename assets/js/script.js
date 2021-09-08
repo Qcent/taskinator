@@ -7,30 +7,36 @@ let tasksInProgressEl = document.querySelector("#tasks-in-progress");
 let tasksCompletedEl = document.querySelector("#tasks-completed");
 
 let taskIdCounter = 0;
+let taskMasterList = [];
 
-const taskStatusChangeHandler = function(event) {
-    // get the task item's id
-    var taskId = event.target.getAttribute("data-task-id");
+const createTaskEl = function(task) {
+    let taskItemEl = document.createElement("li"); //create a new task item
+    taskItemEl.className = "task-item"; //give it a class name
 
-    // get the currently selected option's value and convert to lowercase
-    var statusValue = event.target.value.toLowerCase();
+    // add task id as a custom attribute
+    taskItemEl.setAttribute("data-task-id", taskIdCounter);
 
-    // find the parent task item element based on the id
-    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    let taskInfoEl = document.createElement("div"); //create a taks info container
+    taskInfoEl.className = "task-info"; // set its class property
+    taskInfoEl.innerHTML = "<h3 class='task-name'>" + task.name + // task name
+        "</h3><span class='task-type'>" + task.type + "</span>"; // & type
 
-    if (statusValue === "to do") {
-        tasksToDoEl.appendChild(taskSelected);
-        addNewClass(taskSelected);
-    } else if (statusValue === "in progress") {
-        tasksInProgressEl.appendChild(taskSelected);
-        addNewClass(taskSelected);
-    } else if (statusValue === "completed") {
-        tasksCompletedEl.appendChild(taskSelected);
-        addNewClass(taskSelected);
-    }
 
-};
+    taskItemEl.appendChild(taskInfoEl); // append the info to the item
+    taskItemEl.appendChild(createTaskActions(taskIdCounter)); // append the Actions
 
+    tasksToDoEl.appendChild(taskItemEl); // append the item to the task list
+    addNewClass(taskItemEl);
+
+    /**************** */
+    //add ID property to the task
+    task.ID = taskIdCounter;
+    //add task to Master list
+    taskMasterList.push(task);
+    /****************** */
+
+    taskIdCounter++; // increase for next id
+}
 const createTaskActions = function(taskId) {
 
     let actionContainerEl = document.createElement("div");
@@ -79,8 +85,13 @@ const createTaskActions = function(taskId) {
 const deleteTask = function(taskId) {
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     taskSelected.remove();
+    // loop through tasks array and task object with new content
+    for (let i = 0; i < taskMasterList.length; i++) {
+        if (taskMasterList[i].ID === parseInt(taskId)) { // find the task that matches taskId
+            taskMasterList.splice(i, 1); //remove that task index from the master list
+        }
+    };
 };
-
 const editTask = function(taskId) {
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
@@ -99,29 +110,6 @@ const editTask = function(taskId) {
     document.querySelector("#save-task").textContent = "Save Task";
 
 };
-
-const taskButtonHandler = function(event) {
-
-    if (event.target.matches(".edit-btn")) {
-        // get the element's task id
-        var taskId = event.target.getAttribute("data-task-id");
-        editTask(taskId);
-    }
-    if (event.target.matches(".delete-btn")) {
-        // get the element's task id
-        if (!confirm("Are you sure you want to Delete?")) { return; }
-        var taskId = event.target.getAttribute("data-task-id");
-        deleteTask(taskId);
-    }
-};
-
-const addNewClass = function(task) {
-    task.classList.add('new-task');
-    setTimeout(function() {
-        task.classList.remove('new-task');
-    }, 1000); //auto remove after 1s
-}
-
 const completeEditTask = function(name, type, taskId) {
     // find the matching task list item
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
@@ -129,6 +117,14 @@ const completeEditTask = function(name, type, taskId) {
     // set new values
     taskSelected.querySelector("h3.task-name").textContent = name;
     taskSelected.querySelector("span.task-type").textContent = type;
+
+    // loop through tasks array and finds task object with taskId / updates content
+    for (let i = 0; i < taskMasterList.length; i++) {
+        if (taskMasterList[i].ID === parseInt(taskId)) {
+            taskMasterList[i].name = name;
+            taskMasterList[i].type = type;
+        }
+    };
 
     //alert("Task Updated!");
     //change tasks css classes 
@@ -140,6 +136,14 @@ const completeEditTask = function(name, type, taskId) {
     document.querySelector("#save-task").textContent = "Add Task";
 
 }
+
+const addNewClass = function(task) {
+    task.classList.add('new-task');
+    setTimeout(function() {
+        task.classList.remove('new-task');
+    }, 1000); //auto remove after 1s
+}
+
 const taskFormHandler = function(event) {
     event.preventDefault(); // stop page refresh on submit
 
@@ -163,35 +167,59 @@ const taskFormHandler = function(event) {
     // no data attribute, so create object as normal and pass to createTaskEl function
     else {
         // package as an object with properties {name, type} to be sent to createTaskEl()
-        createTaskEl({
+        var taskDataObj = {
+            ID: '',
             name: taskNameInput,
-            type: taskTypeInput
-        });
+            type: taskTypeInput,
+            status: "to do"
+        }
+        createTaskEl(taskDataObj);
     }
     formEl.reset(); //reset the form values
 }
+const taskStatusChangeHandler = function(event) {
+    // get the task item's id
+    var taskId = event.target.getAttribute("data-task-id");
 
-const createTaskEl = function(task) {
-    let taskItemEl = document.createElement("li"); //create a new task item
-    taskItemEl.className = "task-item"; //give it a class name
+    // get the currently selected option's value and convert to lowercase
+    var statusValue = event.target.value.toLowerCase();
 
-    // add task id as a custom attribute
-    taskItemEl.setAttribute("data-task-id", taskIdCounter);
+    // find the parent task item element based on the id
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
-    let taskInfoEl = document.createElement("div"); //create a taks info container
-    taskInfoEl.className = "task-info"; // set its class property
-    taskInfoEl.innerHTML = "<h3 class='task-name'>" + task.name + // task name
-        "</h3><span class='task-type'>" + task.type + "</span>"; // & type
+    if (statusValue === "to do") {
+        tasksToDoEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
+    } else if (statusValue === "in progress") {
+        tasksInProgressEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
+    } else if (statusValue === "completed") {
+        tasksCompletedEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
+    }
+    // loop through tasks array and find task object with taskId
+    for (let i = 0; i < taskMasterList.length; i++) {
+        if (taskMasterList[i].ID === parseInt(taskId)) {
+            taskMasterList[i].status = statusValue
+        }
+    };
 
+};
+const taskButtonHandler = function(event) {
 
-    taskItemEl.appendChild(taskInfoEl); // append the info to the item
-    taskItemEl.appendChild(createTaskActions(taskIdCounter)); // append the Actions
+    if (event.target.matches(".edit-btn")) {
+        // get the element's task id
+        var taskId = event.target.getAttribute("data-task-id");
+        editTask(taskId);
+    }
+    if (event.target.matches(".delete-btn")) {
+        // get the element's task id
+        if (!confirm("Are you sure you want to Delete?")) { return; }
+        var taskId = event.target.getAttribute("data-task-id");
+        deleteTask(taskId);
+    }
+};
 
-    tasksToDoEl.appendChild(taskItemEl); // append the item to the task list
-    addNewClass(taskItemEl);
-
-    taskIdCounter++; // increase for next id
-}
 
 pageContentEl.addEventListener("click", taskButtonHandler);
 formEl.addEventListener("submit", taskFormHandler);
