@@ -2,6 +2,9 @@ let tasksToDoEl = document.querySelector("#tasks-to-do");
 let formEl = document.querySelector("#task-form");
 var pageContentEl = document.querySelector("#page-content");
 
+let taskFormName = document.querySelector("input[name='task-name']");
+let taskFormType = document.querySelector("select[name='task-type']");
+
 let taskIdCounter = 0;
 
 const createTaskActions = function(taskId) {
@@ -54,6 +57,19 @@ var deleteTask = function(taskId) {
     taskSelected.remove();
 };
 
+var editTask = function(taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    // get content from task name and type
+    var taskName = taskSelected.querySelector("h3.task-name").textContent;
+    var taskType = taskSelected.querySelector("span.task-type").textContent;
+    // Update the form with the task name and type
+    taskFormName.value = taskName;
+    taskFormType.value = taskType;
+
+    document.querySelector("#save-task").textContent = "Save Task";
+
+};
+
 var taskButtonHandler = function(event) {
 
     if (event.target.matches(".edit-btn")) {
@@ -72,8 +88,8 @@ const taskFormHandler = function(event) {
     event.preventDefault(); // stop page refresh on submit
 
     // get the name and type of task to bbe added from the user submitted form
-    let taskNameInput = document.querySelector("input[name='task-name']").value;
-    let taskTypeInput = document.querySelector("select[name='task-type']").value;
+    let taskNameInput = taskFormName.value;
+    let taskTypeInput = taskFormType.value;
 
     /** Validate inputs  */
     if (!taskNameInput || !taskTypeInput) {
