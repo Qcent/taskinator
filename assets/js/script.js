@@ -76,10 +76,8 @@ const deleteTask = function(taskId) {
 };
 const editTask = function(taskId) {
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
-
     //change tasks css class to .edited-task
     taskSelected.classList.add('edited-task');
-
     // get content from task name and type
     let taskName = taskSelected.querySelector("h3.task-name").textContent;
     let taskType = taskSelected.querySelector("span.task-type").textContent;
@@ -90,7 +88,6 @@ const editTask = function(taskId) {
     formEl.setAttribute("data-task-id", taskId);
     //change button to say save task
     document.querySelector("#save-task").textContent = "Save Task";
-
 };
 const completeEditTask = function(name, type, taskId) {
     // find the matching task list item
@@ -144,7 +141,7 @@ const taskFormHandler = function(event) {
     // no data attribute, so create object as normal and pass to createTaskEl function
     else {
         // package as an object with properties {name, type} to be sent to createTaskEl()
-        var taskDataObj = {
+        let taskDataObj = {
                 ID: '',
                 name: taskNameInput,
                 type: taskTypeInput,
@@ -155,7 +152,6 @@ const taskFormHandler = function(event) {
 
         //add task to Master list
         taskMasterList.push(taskDataObj);
-
         //update localStorage
         saveTasks();
     }
