@@ -1,5 +1,7 @@
 let tasksToDoEl = document.querySelector("#tasks-to-do");
 let formEl = document.querySelector("#task-form");
+var pageContentEl = document.querySelector("#page-content");
+
 let taskIdCounter = 0;
 
 const createTaskActions = function(taskId) {
@@ -47,6 +49,25 @@ const createTaskActions = function(taskId) {
 
 }
 
+var deleteTask = function(taskId) {
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+    taskSelected.remove();
+};
+
+var taskButtonHandler = function(event) {
+
+    if (event.target.matches(".edit-btn")) {
+        // get the element's task id
+        var taskId = event.target.getAttribute("data-task-id");
+        editTask(taskId);
+    }
+    if (event.target.matches(".delete-btn")) {
+        // get the element's task id
+        var taskId = event.target.getAttribute("data-task-id");
+        deleteTask(taskId);
+    }
+};
+
 const taskFormHandler = function(event) {
     event.preventDefault(); // stop page refresh on submit
 
@@ -91,5 +112,5 @@ const createTaskEl = function(task) {
     taskIdCounter++; // increase for next id
 }
 
-// buttonEl.addEventListener("click", createTaskHandler);
+pageContentEl.addEventListener("click", taskButtonHandler);
 formEl.addEventListener("submit", taskFormHandler);
