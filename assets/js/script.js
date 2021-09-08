@@ -240,10 +240,47 @@ const taskButtonHandler = function(event) {
 const saveTasks = function() {
     localStorage.setItem("TaskList", JSON.stringify(taskMasterList));
 }
-const retreiveTasks = function() {
+const retrieveTasks = function() {
     taskMasterList = JSON.parse(localStorage.getItem('TaskList'));
+}
+
+const renderSavedTasks = function() {
+
+    retrieveTasks();
+    taskIdCounter = taskMasterList.length;
+
+    let renderCount = 0;
+    taskMasterList.forEach(function(task) {
+        let taskItemEl = document.createElement("li"); //create a new task item
+        taskItemEl.className = "task-item"; //give it a class name
+
+        // add task id as a custom attribute
+        taskItemEl.setAttribute("data-task-id", task.ID);
+
+        let taskInfoEl = document.createElement("div"); //create a taks info container
+        taskInfoEl.className = "task-info"; // set its class property
+        taskInfoEl.innerHTML = "<h3 class='task-name'>" + task.name + // task name
+            "</h3><span class='task-type'>" + task.type + "</span>"; // & type
+
+        taskItemEl.appendChild(taskInfoEl); // append the info to the item
+        taskItemEl.appendChild(createTaskActions(task.ID)); // append the Actions
+
+        let statusValue = task.status; // set the task in the correct column
+        if (statusValue === "to do") {
+            tasksToDoEl.appendChild(taskItemEl);
+        } else if (statusValue === "in progress") {
+            tasksInProgressEl.appendChild(taskItemEl);
+        } else if (statusValue === "completed") {
+            tasksCompletedEl.appendChild(taskItemEl);
+        }
+        addNewClass(taskItemEl);
+
+        //renderCount++; // increase for next id
+    });
 }
 
 pageContentEl.addEventListener("click", taskButtonHandler);
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+renderSavedTasks();
