@@ -65,7 +65,9 @@ var editTask = function(taskId) {
     // Update the form with the task name and type
     taskFormName.value = taskName;
     taskFormType.value = taskType;
-
+    //set the id of the task to be edited
+    formEl.setAttribute("data-task-id", taskId);
+    //change button to say save task
     document.querySelector("#save-task").textContent = "Save Task";
 
 };
@@ -84,6 +86,21 @@ var taskButtonHandler = function(event) {
     }
 };
 
+const completeEditTask = function(name, type, taskId) {
+    // find the matching task list item
+    var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    // set new values
+    taskSelected.querySelector("h3.task-name").textContent = name;
+    taskSelected.querySelector("span.task-type").textContent = type;
+
+    alert("Task Updated!");
+
+    //reset the form task id and submit button
+    formEl.removeAttribute("data-task-id");
+    document.querySelector("#save-task").textContent = "Add Task";
+
+}
 const taskFormHandler = function(event) {
     event.preventDefault(); // stop page refresh on submit
 
@@ -97,13 +114,22 @@ const taskFormHandler = function(event) {
         return false; // kill the rest of code exicution if invalid input detected
     }
     /** if valid continue */
+    let isEdit = formEl.hasAttribute("data-task-id");
 
+    // has data attribute, so get task id and call function to complete edit process
+    if (isEdit) {
+        var taskId = formEl.getAttribute("data-task-id");
+        completeEditTask(taskNameInput, taskTypeInput, taskId);
+    }
+    // no data attribute, so create object as normal and pass to createTaskEl function
+    else {
+        // package as an object with properties {name, type} to be sent to createTaskEl()
+        createTaskEl({
+            name: taskNameInput,
+            type: taskTypeInput
+        });
+    }
     formEl.reset(); //reset the form values
-    // package as an object with properties {name, type} to be sent to createTaskEl()
-    createTaskEl({
-        name: taskNameInput,
-        type: taskTypeInput
-    });
 }
 
 const createTaskEl = function(task) {
