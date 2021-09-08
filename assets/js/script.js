@@ -83,6 +83,14 @@ const createTaskActions = function(taskId) {
 }
 
 const deleteTask = function(taskId) {
+    if (formEl.getAttribute("data-task-id") === taskId) {
+        if (!confirm("You know you are editing this, right")) { return; } // double confirmation when deleting the task you are editing
+        // reset all the editing form changes
+        formEl.reset();
+        formEl.removeAttribute("data-task-id");
+        document.querySelector("#save-task").textContent = "Add Task";
+    }
+
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
     taskSelected.remove();
     // loop through tasks array and task object with new content
