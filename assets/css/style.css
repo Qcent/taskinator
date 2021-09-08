@@ -219,13 +219,41 @@ footer {
     font-size: 2rem;
 }
 
+.new-task {
+    animation: new-task-ani .8s ease 1;
+}
+
+.edited-task {
+    transition: all .4s ease;
+    background: rgb(150, 0, 0);
+    border-color: yellow;
+}
+
+@keyframes new-task-ani {
+    0% {
+        background-color: yellowgreen;
+    }
+}
+
+50% {
+    background-color: whitesmoke;
+}
+
+100% {
+    background-color: blue;
+}
+
+
+}
 @media screen and (max-width: 980px) {
     form .form-group {
         flex: 1 100%;
     }
+    
     form .form-group button {
         width: 100%;
     }
+    
     .task-list-wrapper {
         flex-basis: 100%;
     }

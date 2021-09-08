@@ -20,10 +20,13 @@ const taskStatusChangeHandler = function(event) {
 
     if (statusValue === "to do") {
         tasksToDoEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
     } else if (statusValue === "in progress") {
         tasksInProgressEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
     } else if (statusValue === "completed") {
         tasksCompletedEl.appendChild(taskSelected);
+        addNewClass(taskSelected);
     }
 
 };
@@ -80,6 +83,10 @@ const deleteTask = function(taskId) {
 
 const editTask = function(taskId) {
     let taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+
+    //change tasks css class to .edited-task
+    taskSelected.classList.add('edited-task');
+
     // get content from task name and type
     let taskName = taskSelected.querySelector("h3.task-name").textContent;
     let taskType = taskSelected.querySelector("span.task-type").textContent;
@@ -102,10 +109,18 @@ const taskButtonHandler = function(event) {
     }
     if (event.target.matches(".delete-btn")) {
         // get the element's task id
+        if (!confirm("Are you sure you want to Delete?")) { return; }
         var taskId = event.target.getAttribute("data-task-id");
         deleteTask(taskId);
     }
 };
+
+const addNewClass = function(task) {
+    task.classList.add('new-task');
+    setTimeout(function() {
+        task.classList.remove('new-task');
+    }, 1000); //auto remove after 1s
+}
 
 const completeEditTask = function(name, type, taskId) {
     // find the matching task list item
@@ -115,7 +130,10 @@ const completeEditTask = function(name, type, taskId) {
     taskSelected.querySelector("h3.task-name").textContent = name;
     taskSelected.querySelector("span.task-type").textContent = type;
 
-    alert("Task Updated!");
+    //alert("Task Updated!");
+    //change tasks css classes 
+    taskSelected.classList.remove('edited-task');
+    addNewClass(taskSelected); //function sets class and auto removes
 
     //reset the form task id and submit button
     formEl.removeAttribute("data-task-id");
@@ -167,10 +185,10 @@ const createTaskEl = function(task) {
 
 
     taskItemEl.appendChild(taskInfoEl); // append the info to the item
+    taskItemEl.appendChild(createTaskActions(taskIdCounter)); // append the Actions
 
     tasksToDoEl.appendChild(taskItemEl); // append the item to the task list
-
-    taskItemEl.appendChild(createTaskActions(taskIdCounter)); // append the Actions
+    addNewClass(taskItemEl);
 
     taskIdCounter++; // increase for next id
 }
