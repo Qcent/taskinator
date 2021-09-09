@@ -3,15 +3,31 @@
 }
 
  :root {
-    --primary: #44e9ff;
-    --secondary: #497980;
-    --tertiary: rgb(192, 246, 253);
-    --grey: #333;
+    /* all colors referenced are now variable here */
+    --primary: #5448c8;
+    --secondary: #2a2a72;
+    --tertiary: #ffa400;
+    /*  */
+    --grey: #232323;
+    --bgcolor: #eaf6ff;
+    --taskbg: linear-gradient(133deg, rgba(164, 160, 155, 0.33657212885154064) 0%, rgba(104, 111, 120, 1) 100%);
+    --shadow: rgba(59, 153, 252, 0.7);
+    /*  */
+    --editbg: #009ffd;
+    --editborder: #ffa400;
+    /*  */
+    --dropdownbg: #fff;
+    --dropdownborder: #888;
+    --dropdownborder-focus: #aaa;
+    /*   */
+    --anicol1: #2a2a72;
+    --anicol2: whitesmoke;
+    /*   */
     font-size: 62.5%;
 }
 
 body {
-    background: #ededed;
+    background: var(--bgcolor);
     color: var(--grey);
     margin: 0;
     padding: 0;
@@ -23,14 +39,24 @@ body {
 
 header {
     background: var(--secondary);
-    padding: 30px 25px;
+    padding: 30px 2rem .21rem 2rem;
     border-bottom: 5px solid var(--primary);
+    background-image: url("https://images.alphacoders.com/590/59083.jpg"), linear-gradient(90deg, #000, #000 30%, var(--secondary) 100%);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left;
 }
 
 header p {
     color: var(--tertiary);
-    margin: 5px 0 20px;
-    font-size: 2rem;
+    margin: 5px 0 1.3rem;
+    font-size: 1.8rem;
+    padding-left: 2rem;
+}
+
+header h1,
+header p {
+    margin-left: 12rem;
 }
 
 p,
@@ -55,17 +81,26 @@ form input {
 }
 
 form .form-group {
-    margin: 10px 6px 10px 0;
+    margin: .1rem 0;
     flex: 1;
+}
+
+.form-group .btn {
+    margin-left: 2px;
 }
 
 footer {
     width: 100%;
     background: var(--secondary);
+    background: linear-gradient(90deg, var(--grey) 0%, var(--secondary) 100%);
     color: var(--tertiary);
-    font-size: 2.4rem;
-    padding: 20px;
+    font-size: 1.4rem;
+    padding: 1rem;
     border-top: 5px solid var(--primary);
+}
+
+footer i {
+    font-size: 1rem;
 }
 
 .page-title {
@@ -86,6 +121,7 @@ footer {
 
 .task-list-wrapper {
     flex: 1;
+    min-width: 20em;
     margin: 0 20px 20px;
 }
 
@@ -98,7 +134,7 @@ footer {
     list-style: none;
     padding: 15px;
     height: calc(100% - 50px);
-    background: rgb(196, 196, 196);
+    background: var(--taskbg);
     border-radius: 12px;
     border: 2px solid var(--grey);
 }
@@ -161,8 +197,8 @@ footer {
 .edit-btn,
 .delete-btn {
     font-size: 1.4rem;
-    padding: 5px 7px;
-    margin: 3px;
+    padding: .3rem .4rem;
+    margin: .2rem;
     background: var(--secondary);
     color: #fff;
 }
@@ -181,7 +217,7 @@ footer {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    background-color: #fff;
+    background-color: var(--dropdownbg);
     background-image: url("../images/select-arrow.svg");
     background-repeat: no-repeat, repeat;
     background-position: right 0.7em top 50%, 0 0;
@@ -190,8 +226,9 @@ footer {
 
 .select-status {
     font-size: 1.4rem;
-    padding: 4px 28px 4px 4px;
-    width: auto;
+    padding: /* .3rem 2.2rem .3rem .3rem; */
+    4px 28px 4px 4px;
+    */ width: auto;
 }
 
 .select-dropdown::-ms-expand,
@@ -201,13 +238,13 @@ footer {
 
 .select-dropdown:hover,
 .select-status:hover {
-    border-color: #888;
+    border-color: var(--dropdownborder)
 }
 
 .select-dropdown:focus,
 .select-status:focus {
-    border-color: #aaa;
-    box-shadow: 0 0 1px 3px rgba(59, 153, 252, 0.7);
+    border-color: var(--dropdownborder-focus);
+    box-shadow: 0 0 1px 3px var(--shadow);
     box-shadow: 0 0 0 3px -moz-mac-focusring;
     color: #222;
     outline: none;
@@ -225,36 +262,72 @@ footer {
 
 .edited-task {
     transition: all .4s ease;
-    background: rgb(150, 0, 0);
-    border-color: yellow;
+    background: var(--editbg);
+    border-color: var(--editborder)
 }
 
 @keyframes new-task-ani {
     0% {
-        background-color: yellowgreen;
+        background-color: var(--anicol1);
+    }
+    50% {
+        background-color: var(--anicol2);
+    }
+    100% {
+        background-color: var(--tertiary);
+        ;
     }
 }
 
-50% {
-    background-color: whitesmoke;
-}
-
-100% {
-    background-color: blue;
-}
-
-
-}
 @media screen and (max-width: 980px) {
+    header {
+        background-image: url("https://images.alphacoders.com/590/59083.jpg"), linear-gradient(90deg, #000, #000 80%, var(--secondary) 100%);
+    }
     form .form-group {
         flex: 1 100%;
     }
-    
     form .form-group button {
         width: 100%;
     }
-    
     .task-list-wrapper {
         flex-basis: 100%;
+    }
+    .form-group .btn {
+        margin-top: 3px;
+        margin-left: 0;
+    }
+}
+
+@media screen and (max-width: 580px) {
+     :root {
+        font-size: 58%;
+    }
+    header {
+        background-size: cover;
+    }
+    header h1,
+    header p {
+        text-align: center;
+        margin-left: 0rem;
+        padding-left: 0;
+        border-radius: 1rem;
+    }
+}
+
+@media screen and (max-width: 320px) {
+     :root {
+        font-size: 40%;
+    }
+    header p {
+        background-color: rgba(104, 111, 120, .4);
+    }
+    header p {
+        font-size: 2rem;
+    }
+}
+
+@media screen and (max-width: 212px) {
+     :root {
+        font-size: 25%;
     }
 }
